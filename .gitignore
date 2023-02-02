@@ -1,0 +1,35 @@
+# Created by .ignore support plugin (hsz.mobi)
+HELP.md
+/target/
+/logs/
+/.idea/
+!.mvn/wrapper/maven-wrapper.jar
+/alarm/
+
+
+/.mvn/
+/*/target/
+/mvnw
+/mvnw.cmd
+.cerberus.report
+.coolhealth.report
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*.class
+
+*.settings
+*.project
+*.classpath
+.DS_Store
+*.report
+### application.yml ###
+#/src/main/resources/application.yml
+
+### lucene index###
+/conf/lucene/_0.cfe
+/conf/lucene/_0.cfs
+/conf/lucene/_0.si
+/conf/lucene/segments_1
