@@ -2,14 +2,15 @@ package org.rhinodata.rhinobi.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.rhinodata.rhinobi.common.api.R;
+import org.rhinodata.rhinobi.common.api.ResultCode;
 import org.rhinodata.rhinobi.dataset.DatasetService;
 import org.rhinodata.rhinobi.dataset.domain.Dataset;
 import org.rhinodata.rhinobi.dataset.request.DatasetCreateRequest;
 import org.rhinodata.rhinobi.web.controller.vo.DatasetVO;
-import org.rhinodata.rhinobi.common.api.R;
-import org.rhinodata.rhinobi.common.api.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 
 /**
  * @author chenye
@@ -20,14 +21,18 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "数据集")
 public class DatasetController {
 
-    @Autowired
     private DatasetService datasetService;
-    
+
+    @Autowired
+    public DatasetController(DatasetService datasetService) {
+        this.datasetService = datasetService;
+    }
+
     @GetMapping(value = "/getByUuid")
     @Operation(summary = "根据UUID获得数据集")
     public R<DatasetVO> getByUuid(@RequestParam String uuid) {
         Dataset dataset = datasetService.getDataset(uuid);
-        return R.data(new DatasetVO().fromDataset(dataset));
+        return R.data(DatasetVO.from(dataset));
     }
 
     @PostMapping(value = "/create")
@@ -36,4 +41,5 @@ public class DatasetController {
         datasetService.create(datasetCreateRequest);
         return R.success(ResultCode.SUCCESS);
     }
+
 }

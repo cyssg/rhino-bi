@@ -48,7 +48,17 @@ public class RbDatasetEntity extends BaseEntity {
     @TableField(value = "code")
     private String code;
 
+    @TableField(value = "type")
+    private String type;
+
+    @TableField(value = "datasource_name")
+    private String datasourceName;
+
+    @TableField(value = "datasource_type")
+    private String datasourceType;
+
     @TableField(value = "online_version")
     private String onlineVersion;
+
 
 }

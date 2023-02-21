@@ -10,11 +10,14 @@ import java.util.List;
  * @date 2023-02-01
  */
 @Setter
-public class DefaultDataset implements Dataset{
+public class DefaultDataset implements Dataset {
 
     private String name;
     private String displayName;
     private String code;
+    private DatasetType type;
+    private String datasourceName;
+    private DataSourceType datasourceType;
     private String onlineVersion;
     private List<Column> columns = new ArrayList<>();
     private List<Dimension> dimensions = new ArrayList<>();
@@ -32,6 +35,21 @@ public class DefaultDataset implements Dataset{
     @Override
     public String getCode() {
         return this.code;
+    }
+
+    @Override
+    public DatasetType getType() {
+        return this.type;
+    }
+
+    @Override
+    public String getDatasourceName() {
+        return this.datasourceName;
+    }
+
+    @Override
+    public DataSourceType getDatasourceType() {
+        return this.datasourceType;
     }
 
     @Override
@@ -54,11 +72,11 @@ public class DefaultDataset implements Dataset{
         return null;
     }
 
-    public void addColumn(Column column){
+    public void addColumn(Column column) {
         this.columns.add(column);
-        switch(column.getColumnType()){
+        switch (column.getColumnType()) {
             case DIMENSION -> {
-                this.dimensions.add((Dimension)column);
+                this.dimensions.add((Dimension) column);
             }
             default -> {
 

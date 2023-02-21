@@ -23,13 +23,16 @@ import static cn.hutool.core.date.DatePattern.PURE_DATETIME_FORMAT;
  */
 public class DatasetConvert {
 
-    public static Dataset convert(RbDatasetEntity rbDatasetEntity,List<RbDatasetColumnEntity> rbDatasetColumnEntityList) {
+    public static Dataset convert(RbDatasetEntity rbDatasetEntity, List<RbDatasetColumnEntity> rbDatasetColumnEntityList) {
         DefaultDataset dataset = new DefaultDataset();
         dataset.setName(rbDatasetEntity.getName());
         dataset.setDisplayName(rbDatasetEntity.getDisplayName());
         dataset.setOnlineVersion(rbDatasetEntity.getOnlineVersion());
         dataset.setCode(rbDatasetEntity.getCode());
-        rbDatasetColumnEntityList.forEach(columnEntity->{
+        dataset.setType(DatasetType.getByCode(rbDatasetEntity.getType()));
+        dataset.setDatasourceName(rbDatasetEntity.getDatasourceName());
+        dataset.setDatasourceType(DataSourceType.getByCode(rbDatasetEntity.getDatasourceType()));
+        rbDatasetColumnEntityList.forEach(columnEntity -> {
             Column column = convert(columnEntity);
             dataset.addColumn(column);
         });
@@ -42,6 +45,9 @@ public class DatasetConvert {
         entity.setDisplayName(request.getDisplayName());
         entity.setUuid(UUID.fastUUID().toString());
         entity.setCode(request.getCode());
+        entity.setType(request.getType());
+        entity.setDatasourceName(request.getDatasourceName());
+        entity.setDatasourceType(request.getDatasourceType());
         entity.setOnlineVersion(DateUtil.format(new Date(), PURE_DATETIME_FORMAT) + RandomUtil.randomNumbers(6));
         entity.setCreateUser(StringUtil.isNotBlank(request.getRequestUser()) ? request.getRequestUser() : Constant.SYSTEM);
         entity.setUpdateUser(StringUtil.isNotBlank(request.getRequestUser()) ? request.getRequestUser() : Constant.SYSTEM);
@@ -70,7 +76,7 @@ public class DatasetConvert {
 
     }
 
-    public static Column convert(RbDatasetColumnEntity rbDatasetColumnEntity){
+    public static Column convert(RbDatasetColumnEntity rbDatasetColumnEntity) {
         ColumnType columnType = ColumnType.getByCode(rbDatasetColumnEntity.getColumnType());
         switch (columnType) {
             case DIMENSION -> {

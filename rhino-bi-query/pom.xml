@@ -10,10 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>rhino-bi-query</artifactId>
-
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-    </properties>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.rhinodata</groupId>
+            <artifactId>rhino-bi-dataset</artifactId>
+        </dependency>
+    </dependencies>
 </project>
