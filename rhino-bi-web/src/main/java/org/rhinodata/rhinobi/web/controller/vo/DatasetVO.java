@@ -1,7 +1,7 @@
 package org.rhinodata.rhinobi.web.controller.vo;
 
 import lombok.Data;
-import org.rhinodata.rhinobi.dataset.domain.Dataset;
+import org.rhinodata.rhinobi.metadata.domain.Dataset;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package org.rhinodata.rhinobi.query;
 
-import org.rhinodata.rhinobi.dataset.DatasetService;
+import org.rhinodata.rhinobi.metadata.DatasetService;
 import org.springframework.stereotype.Service;
 
 /**

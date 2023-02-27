@@ -8,12 +8,13 @@
         <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <version>${rhino.bi.version}</version>
+    <packaging>jar</packaging>
     <artifactId>rhino-bi-query</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.rhinodata</groupId>
-            <artifactId>rhino-bi-dataset</artifactId>
+            <artifactId>rhino-bi-metadata</artifactId>
         </dependency>
     </dependencies>
 </project>

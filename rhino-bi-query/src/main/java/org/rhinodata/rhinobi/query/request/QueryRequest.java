@@ -18,28 +18,30 @@ import java.util.stream.Collectors;
 @Data
 public class QueryRequest extends BaseRequest {
 
-    private String queryId;
+  private String queryId;
 
-    private String datasetUuid;
+  private String datasetUuid;
 
-    private List<String> dimensionIdList;
+  private List<String> dimensionIdList;
 
-    private List<String> metricIdList;
+  private List<String> metricIdList;
 
-    public Query convert() {
-
-        DatasetSpec datasetSpec = DatasetSpec.builder().datasetUuid(datasetUuid).build();
-        List<DimensionSpec> dimensionSpecs = dimensionIdList.stream().map(id -> DimensionSpec.builder().dimensionCode(id).build()).collect(Collectors.toList());
-        List<MetricSpec> metricSpecs = metricIdList.stream().map(id -> MetricSpec.builder().metricCode(id).build()).collect(Collectors.toList());
-        SingleDql singleDql = new SingleDql(datasetSpec,dimensionSpecs,metricSpecs,null,null,null);
-        if (StringUtil.isBlank(queryId)) {
-            this.queryId = UUID.fastUUID().toString();
-        }
-        if (Objects.isNull(this.getRequestUser())) {
-            this.setRequestUser(Constant.SYSTEM);
-        }
-        Query query = new Query(queryId, this.getRequestUser(), singleDql);
-        return query;
+  public Query convert() {
+    DatasetSpec datasetSpec = DatasetSpec.builder().datasetUuid(datasetUuid).build();
+    List<Expression> dimExpressionList =
+        dimensionIdList.stream().map(id -> new Expression(id)).collect(Collectors.toList());
+    DimensionSpec dimensionSpec = new DimensionSpec(dimExpressionList);
+    List<Expression> metricExpressionList =
+        metricIdList.stream().map(id -> new Expression(id)).collect(Collectors.toList());
+    MetricSpec metricSpec = new MetricSpec(metricExpressionList);
+    SingleDql singleDql = new SingleDql(datasetSpec, dimensionSpec, metricSpec, null, null, null);
+    if (StringUtil.isBlank(queryId)) {
+      this.queryId = UUID.fastUUID().toString();
     }
-
+    if (Objects.isNull(this.getRequestUser())) {
+      this.setRequestUser(Constant.SYSTEM);
+    }
+    Query query = new Query(queryId, this.getRequestUser(), singleDql);
+    return query;
+  }
 }

@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  * @author chenye
  * @date 2023-02-06
  */
-public class Projects extends PlanNode implements Iterable<Projects.Project> {
+public class Projects implements Iterable<Projects.Project> {
 
     private final List<Project> projectList = new ArrayList<>();
 

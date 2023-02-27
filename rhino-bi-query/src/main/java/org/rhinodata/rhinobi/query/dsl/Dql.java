@@ -1,28 +1,28 @@
 package org.rhinodata.rhinobi.query.dsl;
 
+import org.rhinodata.rhinobi.query.common.Node;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author chenye
  * @date 2023-02-03
  */
-public interface Dql {
+public abstract class Dql implements Node {
 
-    /**
-     * 子查询模式
-     *
-     * @return
-     */
-    List<Dql> children();
+  private final List<Dql> children = new ArrayList<>();
 
-    /**
-     * 接受访问者
-     *
-     * @param visitor
-     * @param context
-     * @param <R>
-     * @param <C>
-     * @return
-     */
-    <R, C> R accept(DqlVisitor<R, C> visitor, C context);
+  @Override
+  public List<Dql> children() {
+    return children;
+  }
+
+  public Dql addChild(Dql dql) {
+    if (Objects.nonNull(dql)) {
+      this.children().add(dql);
+    }
+    return this;
+  }
 }

@@ -4,12 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>rhino-bi-web</module>
-        <module>rhino-bi-dataset</module>
+        <module>rhino-bi-metadata</module>
         <module>rhino-bi-query</module>
         <module>rhino-bi-repository</module>
         <module>rhino-bi-common</module>
         <module>rhino-bi-launch</module>
-        <module>rhino-bi-service</module>
     </modules>
     <packaging>pom</packaging>
     <groupId>org.rhinodata</groupId>
@@ -46,17 +45,17 @@
             </dependency>
             <dependency>
                 <groupId>org.rhinodata</groupId>
-                <artifactId>rhino-bi-dataset</artifactId>
+                <artifactId>rhino-bi-metadata</artifactId>
+                <version>${rhino.bi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.rhinodata</groupId>
+                <artifactId>rhino-bi-query</artifactId>
                 <version>${rhino.bi.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.rhinodata</groupId>
                 <artifactId>rhino-bi-web</artifactId>
-                <version>${rhino.bi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.rhinodata</groupId>
-                <artifactId>rhino-bi-service</artifactId>
                 <version>${rhino.bi.version}</version>
             </dependency>
             <!--Spring boot-->

@@ -2,15 +2,15 @@ package org.rhinodata.rhinobi.query;
 
 import org.rhinodata.rhinobi.common.chain.Handler;
 import org.rhinodata.rhinobi.common.chain.Pipeline;
+import org.rhinodata.rhinobi.query.analysis.QueryAnalyzer;
+import org.rhinodata.rhinobi.query.analysis.Statement;
 import org.rhinodata.rhinobi.query.common.QueryResult;
 import org.rhinodata.rhinobi.query.dsl.Query;
 import org.rhinodata.rhinobi.query.pipeline.QueryPipeline;
-import org.rhinodata.rhinobi.query.plan.PlanNode;
-import org.rhinodata.rhinobi.query.plan.QueryAnalyzer;
-import org.rhinodata.rhinobi.query.runner.SimpleSqlRunner;
+import org.rhinodata.rhinobi.query.plan.StatementToSql;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,35 +21,41 @@ import java.util.List;
 @Service
 public class QueryServiceImpl implements QueryService {
 
-    @Resource
-    private QueryBeans queryBeans;
+  private final QueryBeans queryBeans;
 
-    @Override
-    public QueryResult query(Query query) {
+  @Autowired
+  public QueryServiceImpl(QueryBeans queryBeans) {
+    this.queryBeans = queryBeans;
+  }
 
-        PlanNode planNode = new QueryAnalyzer(queryBeans).analyze(query);
-        QueryContext queryContext = new QueryContext(query.getQueryId(), queryBeans);
-        new SimpleSqlRunner(planNode).exec(queryContext);
-//        defaultQueryPipeline(queryContext).exec();
-        return queryContext.getQueryResult();
-    }
+  @Override
+  public QueryResult query(Query query) {
+    QueryContext queryContext = new QueryContext(query.getQueryId(), queryBeans);
+    Statement statement = new QueryAnalyzer(queryContext).analyze(query);
+    String sql = new StatementToSql(queryContext).toSql(statement);
 
-    QueryPipeline defaultQueryPipeline(QueryContext queryContext) {
-        return new QueryPipeline() {
-            private List<Handler> queryHandlers = new ArrayList<>();
+    //        new SimpleSqlRunner(planNode).exec(queryContext);
+    //        defaultQueryPipeline(queryContext).exec();
+    return queryContext.getQueryResult();
+  }
 
-            @Override
-            public void exec() {
-                queryHandlers.forEach(handler -> {
-                    handler.doHandler(queryContext);
-                });
-            }
+  QueryPipeline defaultQueryPipeline(QueryContext queryContext) {
+    return new QueryPipeline() {
+      private List<Handler> queryHandlers = new ArrayList<>();
 
-            @Override
-            public Pipeline addHandler(Handler handler) {
-                queryHandlers.add(handler);
-                return this;
-            }
-        };
-    }
+      @Override
+      public void exec() {
+        queryHandlers.forEach(
+            handler -> {
+              handler.doHandler(queryContext);
+            });
+      }
+
+      @Override
+      public Pipeline addHandler(Handler handler) {
+        queryHandlers.add(handler);
+        return this;
+      }
+    };
+  }
 }

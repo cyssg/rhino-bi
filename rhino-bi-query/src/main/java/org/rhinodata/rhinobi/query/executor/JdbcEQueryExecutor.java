@@ -1,8 +1,7 @@
 package org.rhinodata.rhinobi.query.executor;
 
-import org.rhinodata.rhinobi.dataset.domain.QueryDataSource;
+import org.rhinodata.rhinobi.metadata.domain.QueryDataSource;
 import org.rhinodata.rhinobi.query.QueryContext;
-import org.rhinodata.rhinobi.query.runner.QueryRunner;
 
 /**
  * @author chenye

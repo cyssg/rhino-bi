@@ -9,16 +9,12 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class DatasetSpec extends AbstractDql {
+public class DatasetSpec extends Dql {
 
     /**
      * 要数据集的UUID
      */
     private String datasetUuid;
 
-    @Override
-    public <R, C> R accept(DqlVisitor<R, C> visitor, C context) {
-        return visitor.visitDatasetSpec(this,context);
-    }
 
 }

@@ -1,5 +1,8 @@
 package org.rhinodata.rhinobi.query.plan;
 
+import lombok.Getter;
+import org.rhinodata.rhinobi.query.common.Node;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,33 +10,25 @@ import java.util.List;
  * @author chenye
  * @date 2023-02-06
  */
+public abstract class PlanNode implements Node {
 
-public abstract class PlanNode {
+  /** children */
+  private final List<PlanNode> children;
 
-    public final List<PlanNode> children;
+  /** 投影字段 */
+  @Getter private final Projects projects;
 
-    public PlanNode() {
-        this.children = new ArrayList<>();
-    }
+  public PlanNode(Projects projects) {
+    this.children = new ArrayList<>();
+    this.projects = projects;
+  }
 
-    public List<PlanNode> getChildren() {
-        return children;
-    }
+  @Override
+  public List<PlanNode> children() {
+    return this.children;
+  }
 
-    public void addChild(PlanNode planNode) {
-        this.children.add(planNode);
-    }
-
-    public Projects getProjects() {
-        for (PlanNode p : children) {
-            if (p instanceof Projects) {
-                return (Projects) p;
-            }
-        }
-        return null;
-    }
-
-    public <R, C> R accept(PlanVisitor<R, C> visitor, C context) {
-        return visitor.visitPlan(this,context);
-    }
+  protected void addChild(PlanNode planNode) {
+    this.children.add(planNode);
+  }
 }

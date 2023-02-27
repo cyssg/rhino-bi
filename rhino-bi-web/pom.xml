@@ -18,17 +18,11 @@
         </dependency>
         <dependency>
             <groupId>org.rhinodata</groupId>
-            <artifactId>rhino-bi-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.rhinodata</groupId>
-            <artifactId>rhino-bi-dataset</artifactId>
+            <artifactId>rhino-bi-metadata</artifactId>
         </dependency>
         <dependency>
             <groupId>org.rhinodata</groupId>
             <artifactId>rhino-bi-query</artifactId>
-            <version>0.0.1</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

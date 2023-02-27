@@ -1,7 +1,7 @@
 package org.rhinodata.rhinobi.web.controller.vo;
 
 import lombok.Data;
-import org.rhinodata.rhinobi.dataset.domain.QueryDataSource;
+import org.rhinodata.rhinobi.metadata.domain.QueryDataSource;
 
 /**
  * @author chenye

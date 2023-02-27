@@ -7,12 +7,11 @@ import org.rhinodata.rhinobi.query.QueryService;
 import org.rhinodata.rhinobi.query.common.QueryResult;
 import org.rhinodata.rhinobi.query.dsl.Query;
 import org.rhinodata.rhinobi.query.request.QueryRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 /**
  * @author chenye
@@ -23,8 +22,12 @@ import javax.annotation.Resource;
 @RequestMapping(value = "/query")
 public class QueryController {
 
-    @Resource
-    private QueryService queryService;
+    private final QueryService queryService;
+
+    @Autowired
+    public QueryController(QueryService queryService) {
+        this.queryService = queryService;
+    }
 
     @PostMapping(value = "/query")
     @Operation(summary = "通过query对象查询")

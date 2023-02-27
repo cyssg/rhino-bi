@@ -1,7 +1,15 @@
 package org.rhinodata.rhinobi.query.dsl;
 
+import cn.hutool.core.lang.Assert;
+import com.google.common.collect.ImmutableList;
 import lombok.Builder;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * @author chenye
@@ -9,12 +17,28 @@ import lombok.Data;
  */
 @Builder
 @Data
-public class MetricSpec extends AbstractDql {
+public class MetricSpec extends Dql implements Iterable<Expression> {
 
-    private String metricCode;
+  private final List<Expression> expressionList;
 
-    @Override
-    public <R, C> R accept(DqlVisitor<R, C> visitor, C context) {
-        return visitor.visitMetricSpec(this, context);
-    }
+  public MetricSpec(List<Expression> expressionList) {
+    this.expressionList =
+        ImmutableList.copyOf(Assert.notNull(expressionList, "expressionList 为NULL"));
+  }
+
+  @NotNull
+  @Override
+  public Iterator<Expression> iterator() {
+    return expressionList.iterator();
+  }
+
+  @Override
+  public void forEach(Consumer<? super Expression> action) {
+    Iterable.super.forEach(action);
+  }
+
+  @Override
+  public Spliterator<Expression> spliterator() {
+    return Iterable.super.spliterator();
+  }
 }
