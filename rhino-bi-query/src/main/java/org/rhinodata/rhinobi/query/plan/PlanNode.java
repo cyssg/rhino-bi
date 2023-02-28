@@ -1,6 +1,7 @@
 package org.rhinodata.rhinobi.query.plan;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.rhinodata.rhinobi.query.common.Node;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
  * @author chenye
  * @date 2023-02-06
  */
+@ToString
 public abstract class PlanNode implements Node {
 
   /** children */
@@ -31,4 +33,6 @@ public abstract class PlanNode implements Node {
   protected void addChild(PlanNode planNode) {
     this.children.add(planNode);
   }
+
+
 }

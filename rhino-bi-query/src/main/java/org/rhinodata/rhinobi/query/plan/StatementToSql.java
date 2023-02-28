@@ -79,7 +79,7 @@ public record StatementToSql(QueryContext queryContext) {
               item -> {
                 selectStr.append(item.expr());
                 if (StrUtil.isNotBlank(item.alias())) {
-                  selectStr.append(QueryConstants.AS).append(item.expr());
+                  selectStr.append(QueryConstants.AS).append(item.alias());
                 }
                 selectStr.append(QueryConstants.COMMA);
               });

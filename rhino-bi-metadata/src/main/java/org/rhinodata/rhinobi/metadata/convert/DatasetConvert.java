@@ -43,7 +43,7 @@ public class DatasetConvert {
         RbDatasetEntity entity = new RbDatasetEntity();
         entity.setName(request.getName());
         entity.setDisplayName(request.getDisplayName());
-        entity.setUuid(UUID.fastUUID().toString());
+        entity.setUuid(UUID.fastUUID().toString(true));
         entity.setCode(request.getCode());
         entity.setType(request.getType());
         entity.setDatasourceName(request.getDatasourceName());
@@ -62,7 +62,7 @@ public class DatasetConvert {
         entity.setDatasetUuid(request.getDatasetUuid());
         entity.setName(request.getName());
         entity.setDisplayName(request.getDisplayName());
-        entity.setUuid(UUID.fastUUID().toString());
+        entity.setUuid(UUID.fastUUID().toString(true));
         entity.setCode(request.getCode());
         entity.setDataType(request.getDataType());
         entity.setColumnType(request.getColumnType());
@@ -86,6 +86,14 @@ public class DatasetConvert {
                 dimension.setCode(rbDatasetColumnEntity.getCode());
                 dimension.setDataType(DataType.getByCode(rbDatasetColumnEntity.getDataType()));
                 return dimension;
+            }
+            case METRIC -> {
+                Metric metric = new Metric(columnType);
+                metric.setName(rbDatasetColumnEntity.getName());
+                metric.setCode(rbDatasetColumnEntity.getCode());
+                metric.setDisplayName(rbDatasetColumnEntity.getDisplayName());
+                metric.setDataType(DataType.getByCode(rbDatasetColumnEntity.getDataType()));
+                return metric;
             }
             default -> {
                 return null;

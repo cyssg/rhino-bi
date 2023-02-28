@@ -21,7 +21,7 @@ public abstract class StatementVisitor<R, C> implements NodeVisitor<R, C> {
     return null;
   }
 
-  public R visitWhereStatement(WhereStatement whereStatement, C context) {
+  public R visitFilterStatement(FilterStatement filterStatement, C context) {
     return null;
   }
 
@@ -43,8 +43,8 @@ public abstract class StatementVisitor<R, C> implements NodeVisitor<R, C> {
     if (node instanceof JoinStatement) {
       return visitJoinStatement(node.unwrap(JoinStatement.class), context);
     }
-    if (node instanceof WhereStatement) {
-      return visitWhereStatement(node.unwrap(WhereStatement.class), context);
+    if (node instanceof FilterStatement) {
+      return visitFilterStatement(node.unwrap(FilterStatement.class), context);
     }
     if (node instanceof OrderByStatement) {
       return visitOrderByStatement(node.unwrap(OrderByStatement.class), context);

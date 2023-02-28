@@ -1,8 +1,11 @@
 package org.rhinodata.rhinobi.query.analysis;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import lombok.Getter;
 import org.rhinodata.rhinobi.metadata.domain.Dataset;
+import org.rhinodata.rhinobi.metadata.domain.Dimension;
+import org.rhinodata.rhinobi.metadata.domain.Metric;
 import org.rhinodata.rhinobi.query.QueryContext;
 import org.rhinodata.rhinobi.query.dsl.*;
 
@@ -24,7 +27,7 @@ public record QueryAnalyzer(QueryContext queryContext) {
     class QueryAnalyzerHelper{
         private  ProjectStatement projectStatement;
         private  Statement fromStatement;
-        private  WhereStatement whereStatement;
+        private  FilterStatement filterStatement;
         private  OrderByStatement orderByStatement;
 
         public void setStatement(Statement statement){
@@ -75,7 +78,7 @@ public record QueryAnalyzer(QueryContext queryContext) {
            QueryStatement queryStatement = new QueryStatement(
                    helper.getProjectStatement(),
                    helper.getFromStatement(),
-                   helper.getWhereStatement(),
+                   helper.getFilterStatement(),
                    helper.getOrderByStatement()
            );
             return queryStatement;
@@ -91,7 +94,8 @@ public record QueryAnalyzer(QueryContext queryContext) {
         public Statement visitDimensionSpec(DimensionSpec dimensionSpec, Void c) {
             ProjectStatement projectStatement = new ProjectStatement();
             dimensionSpec.forEach(expression -> {
-                projectStatement.addItem(new ProjectStatement.Item(expression.getExpr(),expression.getAlias(),true));
+                Dimension dimension = queryContext.getQueryBeans().datasetService().getDimension(expression.getExpr());
+                projectStatement.addItem(new ProjectStatement.Item(dimension.getCode(),StrUtil.isBlank(expression.getAlias())?dimension.getName():expression.getAlias(),true));
             });
             return projectStatement;
         }
@@ -99,7 +103,8 @@ public record QueryAnalyzer(QueryContext queryContext) {
         public Statement visitMetricSpec(MetricSpec metricSpec, Void c) {
             ProjectStatement projectStatement = new ProjectStatement();
             metricSpec.forEach(expression -> {
-                projectStatement.addItem(new ProjectStatement.Item(expression.getExpr(),expression.getAlias(),false));
+                Metric metric = queryContext.getQueryBeans().datasetService().getMetric(expression.getExpr());
+                projectStatement.addItem(new ProjectStatement.Item(metric.getCode(), StrUtil.isBlank(expression.getAlias())?metric.getName():expression.getAlias(),false));
             });
             return projectStatement;
         }

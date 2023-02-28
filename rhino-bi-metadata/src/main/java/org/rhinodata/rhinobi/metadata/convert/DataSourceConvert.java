@@ -43,7 +43,7 @@ public class DataSourceConvert {
 
     public static RbDataSourceEntity convert(DataSourceCreateRequest request) {
         RbDataSourceEntity rbDataSourceEntity = new RbDataSourceEntity();
-        rbDataSourceEntity.setUuid(UUID.fastUUID().toString());
+        rbDataSourceEntity.setUuid(UUID.fastUUID().toString(true));
         rbDataSourceEntity.setName(request.getName());
         rbDataSourceEntity.setType(request.getType());
         rbDataSourceEntity.setConfig(request.getConfig());

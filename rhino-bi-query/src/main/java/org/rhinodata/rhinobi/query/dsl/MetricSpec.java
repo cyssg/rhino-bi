@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  */
 @Builder
 @Data
-public class MetricSpec extends Dql implements Iterable<Expression> {
+public class  MetricSpec extends Dql implements Iterable<Expression> {
 
   private final List<Expression> expressionList;
 

@@ -7,7 +7,9 @@ import org.rhinodata.rhinobi.query.analysis.Statement;
 import org.rhinodata.rhinobi.query.common.QueryResult;
 import org.rhinodata.rhinobi.query.dsl.Query;
 import org.rhinodata.rhinobi.query.pipeline.QueryPipeline;
-import org.rhinodata.rhinobi.query.plan.StatementToSql;
+import org.rhinodata.rhinobi.query.plan.PlanNode;
+import org.rhinodata.rhinobi.query.plan.QueryPlanner;
+import org.rhinodata.rhinobi.query.runner.QueryRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +34,8 @@ public class QueryServiceImpl implements QueryService {
   public QueryResult query(Query query) {
     QueryContext queryContext = new QueryContext(query.getQueryId(), queryBeans);
     Statement statement = new QueryAnalyzer(queryContext).analyze(query);
-    String sql = new StatementToSql(queryContext).toSql(statement);
-
-    //        new SimpleSqlRunner(planNode).exec(queryContext);
-    //        defaultQueryPipeline(queryContext).exec();
+    PlanNode planNode = new QueryPlanner(queryContext).plan(statement);
+    QueryRunner.getInstance(planNode).exec(queryContext);
     return queryContext.getQueryResult();
   }
 

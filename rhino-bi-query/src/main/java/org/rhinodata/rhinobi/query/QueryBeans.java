@@ -1,5 +1,6 @@
 package org.rhinodata.rhinobi.query;
 
+import org.rhinodata.rhinobi.metadata.DataSourceService;
 import org.rhinodata.rhinobi.metadata.DatasetService;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,6 @@ import org.springframework.stereotype.Service;
  * @date 2023-02-06
  */
 @Service
-public record QueryBeans(DatasetService datasetService) {
+public record QueryBeans(DatasetService datasetService, DataSourceService dataSourceService) {
 
 }

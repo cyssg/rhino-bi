@@ -11,21 +11,21 @@ public class QueryStatement extends Statement {
 
   private final ProjectStatement projectStatement;
   private final Statement fromStatement;
-  private final WhereStatement whereStatement;
+  private final FilterStatement filterStatement;
   private final OrderByStatement orderByStatement;
 
   public QueryStatement(
       ProjectStatement projectStatement,
       Statement fromStatement,
-      WhereStatement whereStatement,
+      FilterStatement filterStatement,
       OrderByStatement orderByStatement) {
     this.projectStatement = projectStatement;
     this.fromStatement = fromStatement;
-    this.whereStatement = whereStatement;
+    this.filterStatement = filterStatement;
     this.orderByStatement = orderByStatement;
     this.addChild(projectStatement)
         .addChild(fromStatement)
-        .addChild(whereStatement)
+        .addChild(filterStatement)
         .addChild(orderByStatement);
   }
 }

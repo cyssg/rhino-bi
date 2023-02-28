@@ -1,77 +1,32 @@
-//package org.rhinodata.rhinobi.query.runner;
-//
-//import org.rhinodata.rhinobi.query.QueryContext;
-//import org.rhinodata.rhinobi.query.common.QueryConstants;
-//import org.rhinodata.rhinobi.query.analysis.FromStatement;
-//import org.rhinodata.rhinobi.query.plan.PlanNode;
-//import org.rhinodata.rhinobi.query.plan.Projects;
-//
-///**
-// * @author chenye
-// * @date 2023-02-20
-// */
-//public class SimpleSqlRunner implements QueryRunner {
-//
-//
-//    private final StringBuffer selectCharacter;
-//    private final StringBuffer fromCharacter;
-//    private final StringBuffer whereCharacter;
-//    private final StringBuffer groupByCharacter;
-//    private final StringBuffer orderByCharacter;
-//    private final StringBuffer limitCharacter;
-//    private final String sql;
-//
-//    public SimpleSqlRunner(PlanNode planNode) {
-//        this.selectCharacter = new StringBuffer(QueryConstants.SELECT);
-//        this.fromCharacter = new StringBuffer(QueryConstants.FROM);
-//        this.whereCharacter = new StringBuffer();
-//        this.groupByCharacter = new StringBuffer();
-//        this.orderByCharacter = new StringBuffer();
-//        limitCharacter = new StringBuffer();
-//        this.sql = genSql(planNode);
-//
-//    }
-//
-//    private String genSql(PlanNode planNode) {
-//        planNode.children.forEach(p->{
-//            p.accept(new SimpleSqlPlanNodeVisitor(), this);
-//        });
-//        return selectCharacter.append(fromCharacter).toString();
-//    }
-//
-//    @Override
-//    public void exec(QueryContext queryContext) {
-//
-//    }
-//
-//
-//    class SimpleSqlPlanNodeVisitor extends PlanNodeVisitor<Void, SimpleSqlRunner> {
-//
-//        @Override
-//        public Void visitProjects(Projects projects, SimpleSqlRunner context) {
-//            if (projects.size() > 0) {
-//                projects.forEach(p -> {
-//                    selectCharacter
-//                            .append(p.getOriginal())
-//                            .append(QueryConstants.AS)
-//                            .append(p.getOriginal())
-//                            .append(QueryConstants.COMMA);
-//                });
-//                selectCharacter.deleteCharAt(selectCharacter.length() - 1);
-//            }
-//            return null;
-//        }
-//
-//        public Void visitFrom(FromStatement fromStatement, SimpleSqlRunner context) {
-//            fromCharacter
-//                    .append(QueryConstants.LEFT_BRACKET)
-//                    .append(fromStatement.getCode())
-//                    .append(QueryConstants.RIGHT_BRACKET)
-//                    .append(QueryConstants.AS)
-//                    .append(fromStatement.getAlias());
-//            return null;
-//        }
-//
-//    }
-//
-//}
+package org.rhinodata.rhinobi.query.runner;
+
+import org.rhinodata.rhinobi.metadata.domain.QueryDataSource;
+import org.rhinodata.rhinobi.query.QueryContext;
+import org.rhinodata.rhinobi.query.common.QueryData;
+import org.rhinodata.rhinobi.query.executor.QueryExecutor;
+import org.rhinodata.rhinobi.query.executor.QueryExecutorFactory;
+import org.rhinodata.rhinobi.query.plan.SqlPlanNode;
+
+/**
+ * @author chenye
+ * @date 2023-02-20
+ */
+public class SimpleSqlRunner implements QueryRunner {
+
+  private final SqlPlanNode sqlPlanNode;
+  private QueryContext queryContext;
+
+  public SimpleSqlRunner(SqlPlanNode sqlPlanNode) {
+    this.sqlPlanNode = sqlPlanNode;
+  }
+
+  @Override
+  public void exec(QueryContext queryContext) {
+    this.queryContext = queryContext;
+    QueryDataSource queryDataSource =
+        queryContext.getQueryBeans().dataSourceService().getByName(sqlPlanNode.getDatasourceName());
+    QueryExecutor<QueryData> queryExecutor =
+        QueryExecutorFactory.createQueryExecutor(queryDataSource, sqlPlanNode);
+    QueryData queryData = queryExecutor.execute();
+  }
+}

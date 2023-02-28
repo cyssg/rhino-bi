@@ -1,12 +1,11 @@
 package org.rhinodata.rhinobi.query.plan;
 
-import lombok.Getter;
-import org.rhinodata.rhinobi.metadata.domain.Column;
-import org.rhinodata.rhinobi.metadata.domain.Dataset;
+import lombok.Data;
 import org.rhinodata.rhinobi.query.QueryContext;
 import org.rhinodata.rhinobi.query.analysis.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author chenye
@@ -19,12 +18,14 @@ public record QueryPlanner(QueryContext queryContext) {
         return statement.accept(visitor, null);
     }
 
-    class StatementPlanContext{
-        @Getter
-        Set<String> datasourceNameSet = new HashSet<>();
+    @Data
+    class StatementPlanHelper{
+        String datasourceName;
+        Projects projects;
+        boolean needRecalculate;
     }
 
-    class StatementPlannerVisitor extends StatementVisitor<PlanNode, StatementPlanContext> {
+    class StatementPlannerVisitor extends StatementVisitor<PlanNode, StatementPlanHelper> {
         QueryContext queryContext;
         StatementToSql statementToSql;
         StatementPlannerVisitor(QueryContext queryContext){
@@ -33,43 +34,48 @@ public record QueryPlanner(QueryContext queryContext) {
         }
 
 
-        @Override
-        public PlanNode visitProjectStatement(ProjectStatement projectStatement,StatementPlanContext context){
-
-            boolean useSqlPlanNode = true;
-            String datasourceName = null;
-            List<PlanNode> childrenPlanNode = new ArrayList<>();
-            for(Statement statement : projectStatement.children()){
-                PlanNode planNode = statement.accept(this,null);
-                childrenPlanNode.add(planNode);
-                if (planNode instanceof  ReCalculateNode){
-                    useSqlPlanNode = false;
-                }else if (planNode instanceof  SqlPlanNode){
-                    datasourceName = planNode.unwrap(SqlPlanNode.class).getDatasourceName();
-                }
+        public PlanNode visitQueryStatement(QueryStatement queryStatement,StatementPlanHelper parent){
+            PlanNode planNode = null;
+            StatementPlanHelper helper = new StatementPlanHelper();
+            queryStatement.children().forEach(statement -> {
+                statement.accept(this,helper);
+            });
+            if (helper.isNeedRecalculate()){
+                parent.setNeedRecalculate(true);
+                planNode = new RecalculatePlanNode(helper.projects);
+            }else{
+                planNode = new SqlPlanNode(helper.projects,statementToSql.toSql(queryStatement), helper.datasourceName);
             }
+            return planNode;
+
+        }
+
+        @Override
+        public PlanNode visitProjectStatement(ProjectStatement projectStatement,StatementPlanHelper parent){
             Projects projects = new Projects();
             projectStatement.getItems().forEach(item -> {
                 projects.addProject(new Projects.Project(item.expr(),item.alias()));
             });
-            String sql = new StatementToSql(queryContext).toSql(projectStatement);
+            parent.setProjects(projects);
+            return null;
+        }
 
-            if (useSqlPlanNode){
-                SqlPlanNode sqlPlanNode = new SqlPlanNode(projects,sql,datasourceName);
-            }else{
-//                ReCalculateNode reCalculateNode = new ReCalculateNode();
-            }
+        @Override
+        public PlanNode visitScanStatement(ScanStatement scanStatement, StatementPlanHelper parent) {
+            String datasourceName = scanStatement.getDatasourceName();
+            parent.setDatasourceName(datasourceName);
+            parent.setNeedRecalculate(false);
             return null;
         }
 
 
-        public PlanNode visitJoinStatement(JoinStatement joinStatement,StatementPlanContext context){
+        public PlanNode visitJoinStatement(JoinStatement joinStatement,StatementPlanHelper context){
 
             boolean useSqlPlanNode = true;
             List<PlanNode> childrenPlanNode = new ArrayList<>();
             for(Statement statement : joinStatement.children()){
                 PlanNode planNode  = statement.accept(this,context);
-                if (planNode instanceof ReCalculateNode){
+                if (planNode instanceof RecalculatePlanNode){
                     useSqlPlanNode = false;
                 }
             }
@@ -83,22 +89,6 @@ public record QueryPlanner(QueryContext queryContext) {
             return null;
         }
 
-        @Override
-        public PlanNode visitScanStatement(ScanStatement scanStatement, StatementPlanContext context) {
-            String datasetUuid = scanStatement.getDatasetUuid();
-
-            String datasourceName = scanStatement.getDatasourceName();
-            String sql = new StatementToSql(queryContext).toSql(scanStatement);
-            Dataset dataset = queryContext.getQueryBeans().datasetService().getDataset(datasetUuid);
-            List<Column> columnList = dataset.getColumns();
-            Projects projects = new Projects();
-            columnList.forEach(column -> {
-                projects.addProject(new Projects.Project(column.getCode(),column.getName()));
-            });
-            SqlPlanNode sqlPlanNode = new SqlPlanNode(projects,datasourceName,sql);
-            context.datasourceNameSet.add(datasourceName);
-            return sqlPlanNode;
-        }
 
     }
 }

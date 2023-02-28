@@ -5,8 +5,8 @@ package org.rhinodata.rhinobi.query.plan;
  * @author chenye
  * @date 2023-02-24
  */
-public class ReCalculateNode extends PlanNode{
-    public ReCalculateNode(Projects projects) {
+public class RecalculatePlanNode extends PlanNode{
+    public RecalculatePlanNode(Projects projects) {
         super(projects);
     }
 }

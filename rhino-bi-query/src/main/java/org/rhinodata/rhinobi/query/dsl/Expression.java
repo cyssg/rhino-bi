@@ -13,7 +13,7 @@ public class Expression extends Statement {
 
   public Expression(String expr) {
     this.expr = expr;
-    this.alias = expr;
+    this.alias = null;
   }
 
   public Expression(String expr, String alias) {

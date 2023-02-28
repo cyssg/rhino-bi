@@ -1,7 +1,10 @@
 package org.rhinodata.rhinobi.metadata;
 
 import org.rhinodata.rhinobi.metadata.domain.Dataset;
+import org.rhinodata.rhinobi.metadata.domain.Dimension;
+import org.rhinodata.rhinobi.metadata.domain.Metric;
 import org.rhinodata.rhinobi.metadata.request.DatasetCreateRequest;
+
 
 /**
  * 数据集服务
@@ -22,5 +25,20 @@ public interface DatasetService {
      * @param datasetCreateRequest
      */
     void create(DatasetCreateRequest datasetCreateRequest);
+
+    /**
+     * 根据UUID获取指标ID
+     * @param uuid
+     * @return
+     */
+    Metric getMetric(String uuid);
+
+
+    /**
+     * 根据UUID获取维度ID
+     * @param uuid
+     * @return
+     */
+    Dimension getDimension(String uuid);
 
 }
