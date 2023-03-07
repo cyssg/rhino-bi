@@ -19,8 +19,18 @@ public enum OpType {
 
   /** EQ */
   EQ("=", "等于"),
+  /** NOTEQ */
+  NOTEQ("!=", "不等于"),
   /** LT */
-  LT("<", "小于");
+  LT("<", "小于"),
+  /** LTEQ */
+  LTEQ("<=", "小于等于"),
+  /** GT */
+  GT(">", "大于"),
+  /** GTEQ */
+  GTEQ(">=", "大于"),
+  /** IN */
+  IN("in", "IN");
 
   private static final Map<String, OpType> ALL_CODE_ENUM =
       Stream.of(OpType.values()).collect(Collectors.toMap(OpType::getCode, Function.identity()));
@@ -33,7 +43,7 @@ public enum OpType {
   public static OpType getByCode(String code) {
     Objects.requireNonNull(code, "code required");
     OpType opType = ALL_CODE_ENUM.get(code.toUpperCase());
-    Objects.requireNonNull(code, "Error opType code");
+    Objects.requireNonNull(opType, "Error opType code");
     return opType;
   }
 }

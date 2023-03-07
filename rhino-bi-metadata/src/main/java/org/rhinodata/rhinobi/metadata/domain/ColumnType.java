@@ -17,34 +17,27 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum ColumnType {
 
-    /**
-     * DIMENSION
-     */
-    DIMENSION("DIMENSION", "维度"),
-    /**
-     * METRIC
-     */
-    METRIC("METRIC", "指标"),
-    /**
-     * CALCULATE
-     */
-    CALCULATE("CALCULATE", "计算列");
+  /** DIMENSION */
+  DIMENSION("DIMENSION", "维度"),
+  /** DT_DIMENSION */
+  DT_DIMENSION("DT_DIMENSION", "日期维度"),
+  /** METRIC */
+  METRIC("METRIC", "指标"),
+  /** CALCULATE */
+  CALCULATE("CALCULATE", "计算列");
 
-    private static final Map<String, ColumnType> ALL_CODE_ENUM = Stream.of(ColumnType.values())
-            .collect(Collectors.toMap(ColumnType::getCode, Function.identity()));
-    /**
-     * 值
-     */
-    final String code;
-    /**
-     * 信息描述
-     */
-    final String desc;
+  private static final Map<String, ColumnType> ALL_CODE_ENUM =
+      Stream.of(ColumnType.values())
+          .collect(Collectors.toMap(ColumnType::getCode, Function.identity()));
+  /** 值 */
+  final String code;
+  /** 信息描述 */
+  final String desc;
 
-    public static ColumnType getByCode(String code) {
-        Objects.requireNonNull(code,"code required");
-        ColumnType columnType = ALL_CODE_ENUM.get(code.toUpperCase());
-        Objects.requireNonNull(code,"Error columnType code");
-        return columnType;
-    }
+  public static ColumnType getByCode(String code) {
+    Objects.requireNonNull(code, "code required");
+    ColumnType columnType = ALL_CODE_ENUM.get(code.toUpperCase());
+    Objects.requireNonNull(code, "Error columnType code");
+    return columnType;
+  }
 }

@@ -79,20 +79,24 @@ public class DatasetConvert {
     public static Column convert(RbDatasetColumnEntity rbDatasetColumnEntity) {
         ColumnType columnType = ColumnType.getByCode(rbDatasetColumnEntity.getColumnType());
         switch (columnType) {
-            case DIMENSION -> {
-                Dimension dimension = new Dimension(columnType);
-                dimension.setName(rbDatasetColumnEntity.getName());
-                dimension.setDisplayName(rbDatasetColumnEntity.getDisplayName());
-                dimension.setCode(rbDatasetColumnEntity.getCode());
-                dimension.setDataType(DataType.getByCode(rbDatasetColumnEntity.getDataType()));
+            case DIMENSION,DT_DIMENSION -> {
+                Dimension dimension = new Dimension(
+                        rbDatasetColumnEntity.getUuid(),
+                        rbDatasetColumnEntity.getName(),
+                        rbDatasetColumnEntity.getDisplayName(),
+                        rbDatasetColumnEntity.getCode(),
+                        DataType.getByCode(rbDatasetColumnEntity.getDataType())
+                );
                 return dimension;
             }
             case METRIC -> {
-                Metric metric = new Metric(columnType);
-                metric.setName(rbDatasetColumnEntity.getName());
-                metric.setCode(rbDatasetColumnEntity.getCode());
-                metric.setDisplayName(rbDatasetColumnEntity.getDisplayName());
-                metric.setDataType(DataType.getByCode(rbDatasetColumnEntity.getDataType()));
+                Metric metric = new Metric(
+                        rbDatasetColumnEntity.getUuid(),
+                        rbDatasetColumnEntity.getName(),
+                        rbDatasetColumnEntity.getDisplayName(),
+                        rbDatasetColumnEntity.getCode(),
+                        DataType.getByCode(rbDatasetColumnEntity.getDataType())
+                );
                 return metric;
             }
             default -> {

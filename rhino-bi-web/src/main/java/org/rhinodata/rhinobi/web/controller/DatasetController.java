@@ -6,11 +6,13 @@ import org.rhinodata.rhinobi.common.api.R;
 import org.rhinodata.rhinobi.common.api.ResultCode;
 import org.rhinodata.rhinobi.metadata.DatasetService;
 import org.rhinodata.rhinobi.metadata.domain.Dataset;
+import org.rhinodata.rhinobi.metadata.request.DatasetColumnCreateRequest;
 import org.rhinodata.rhinobi.metadata.request.DatasetCreateRequest;
 import org.rhinodata.rhinobi.web.controller.vo.DatasetVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 /**
  * @author chenye
@@ -21,25 +23,35 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "数据集")
 public class DatasetController {
 
-    private DatasetService datasetService;
+  private DatasetService datasetService;
 
-    @Autowired
-    public DatasetController(DatasetService datasetService) {
-        this.datasetService = datasetService;
-    }
+  @Autowired
+  public DatasetController(DatasetService datasetService) {
+    this.datasetService = datasetService;
+  }
 
-    @GetMapping(value = "/getByUuid")
-    @Operation(summary = "根据UUID获得数据集")
-    public R<DatasetVO> getByUuid(@RequestParam String uuid) {
-        Dataset dataset = datasetService.getDataset(uuid);
-        return R.data(DatasetVO.from(dataset));
-    }
+  @GetMapping(value = "/getByUuid")
+  @Operation(summary = "根据UUID获得数据集")
+  public R<DatasetVO> getByUuid(@RequestParam String uuid) {
+    Dataset dataset = datasetService.getDataset(uuid);
+    return R.data(DatasetVO.from(dataset));
+  }
 
-    @PostMapping(value = "/create")
-    @Operation(summary = "创建数据集")
-    public R<String> create(@RequestBody DatasetCreateRequest datasetCreateRequest) {
-        datasetService.create(datasetCreateRequest);
-        return R.success(ResultCode.SUCCESS);
-    }
+  @PostMapping(value = "/create")
+  @Operation(summary = "创建数据集")
+  public R<String> create(@RequestBody DatasetCreateRequest datasetCreateRequest) {
+    datasetService.create(datasetCreateRequest);
+    return R.success(ResultCode.SUCCESS);
+  }
 
+  @PostMapping(value = "/addColumn")
+  @Operation(summary = "为数据集增加列")
+  public R<String> addColumn(
+      @RequestBody List<DatasetColumnCreateRequest> datasetColumnCreateRequest) {
+    datasetColumnCreateRequest.forEach(
+        r -> {
+          datasetService.addColumn(r);
+        });
+    return R.success(ResultCode.SUCCESS);
+  }
 }

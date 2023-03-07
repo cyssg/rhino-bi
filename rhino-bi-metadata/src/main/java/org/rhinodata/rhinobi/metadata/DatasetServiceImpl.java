@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import org.rhinodata.rhinobi.metadata.convert.DatasetConvert;
 import org.rhinodata.rhinobi.metadata.domain.*;
+import org.rhinodata.rhinobi.metadata.request.DatasetColumnCreateRequest;
 import org.rhinodata.rhinobi.metadata.request.DatasetCreateRequest;
 import org.rhinodata.rhinobi.repository.entity.RbDatasetColumnEntity;
 import org.rhinodata.rhinobi.repository.entity.RbDatasetEntity;
@@ -79,9 +80,16 @@ public class DatasetServiceImpl implements DatasetService {
     throw new MetadataException(StrUtil.format("无法找到对应的维度 ： {}", uuid));
   }
 
-  private Column getColumn(String uuid) {
+  @Override
+  public Column getColumn(String uuid) {
     RbDatasetColumnEntity columnEntity = datasetColumnManager.getById(uuid);
     Assert.notNull(columnEntity, "没有找到对应的列 ： {}", uuid);
     return DatasetConvert.convert(columnEntity);
+  }
+
+  @Override
+  public void addColumn(DatasetColumnCreateRequest datasetColumnCreateRequest) {
+    RbDatasetColumnEntity columnEntity = DatasetConvert.convert(datasetColumnCreateRequest);
+    datasetColumnManager.save(columnEntity);
   }
 }

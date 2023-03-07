@@ -1,7 +1,8 @@
 package org.rhinodata.rhinobi.query.dsl;
 
-import lombok.Data;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.pulsar.shade.javax.annotation.concurrent.Immutable;
 
 /**
  * SingleDql 封装的是一个最原子的查询模式，面向单数据集查询
@@ -9,45 +10,76 @@ import lombok.ToString;
  * @author chenye
  * @date 2023-02-03
  */
-@Data
-@ToString
+@Immutable
 public class SingleDql extends Dql {
 
   /** 对哪个数据集进行查询 */
-  private DatasetSpec datasetSpec;
+  private DatasetSpec dataset;
 
   /** 需要哪些维度 */
-  private DimensionSpec dimensionSpec;
+  private DimensionSpec dimension;
 
   /** 需要哪些指标 */
-  private MetricSpec metricSpec;
+  private MetricSpec metric;
 
   /** 过滤条件 */
-  private FilterSpec filterSpec;
+  private FilterSpec filter;
 
   /** 排序方式 */
-  private OrderBySpec orderBySpec;
+  private OrderBySpec orderBy;
 
   /** 条数限制 */
-  private LimitSpec limitSpec;
+  private LimitSpec limit;
 
+  @JsonCreator
   public SingleDql(
-      DatasetSpec datasetSpec,
-      DimensionSpec dimensionSpec,
-      MetricSpec metricSpec,
-      FilterSpec filterSpec,
-      OrderBySpec orderBySpec,
-      LimitSpec limitSpec) {
-    this.datasetSpec = datasetSpec;
-    this.dimensionSpec = dimensionSpec;
-    this.metricSpec = metricSpec;
-    this.filterSpec = filterSpec;
-    this.orderBySpec = orderBySpec;
-    this.limitSpec = limitSpec;
-    this.addChild(datasetSpec)
-        .addChild(dimensionSpec)
-        .addChild(metricSpec)
-        .addChild(filterSpec)
-        .addChild(orderBySpec);
+      @JsonProperty("dataset") DatasetSpec dataset,
+      @JsonProperty("dimension") DimensionSpec dimension,
+      @JsonProperty("metric") MetricSpec metric,
+      @JsonProperty("filter") FilterSpec filter,
+      @JsonProperty("orderBy") OrderBySpec orderBy,
+      @JsonProperty("limit") LimitSpec limit) {
+    this.dataset = dataset;
+    this.dimension = dimension;
+    this.metric = metric;
+    this.filter = filter;
+    this.orderBy = orderBy;
+    this.limit = limit;
+    this.addChild(dataset)
+        .addChild(dimension)
+        .addChild(metric)
+        .addChild(filter)
+        .addChild(orderBy)
+        .addChild(limit);
+  }
+
+  @JsonProperty
+  public DatasetSpec getDataset() {
+    return dataset;
+  }
+
+  @JsonProperty
+  public DimensionSpec getDimension() {
+    return dimension;
+  }
+
+  @JsonProperty
+  public MetricSpec getMetric() {
+    return metric;
+  }
+
+  @JsonProperty
+  public FilterSpec getFilter() {
+    return filter;
+  }
+
+  @JsonProperty
+  public OrderBySpec getOrderBy() {
+    return orderBy;
+  }
+
+  @JsonProperty
+  public LimitSpec getLimit() {
+    return limit;
   }
 }

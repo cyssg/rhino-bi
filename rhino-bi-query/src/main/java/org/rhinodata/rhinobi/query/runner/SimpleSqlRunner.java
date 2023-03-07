@@ -28,5 +28,6 @@ public class SimpleSqlRunner implements QueryRunner {
     QueryExecutor<QueryData> queryExecutor =
         QueryExecutorFactory.createQueryExecutor(queryDataSource, sqlPlanNode);
     QueryData queryData = queryExecutor.execute();
+    queryContext.getQueryResult().setResult(queryData.toMap());
   }
 }

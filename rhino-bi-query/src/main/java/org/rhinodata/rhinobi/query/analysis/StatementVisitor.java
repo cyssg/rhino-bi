@@ -25,6 +25,25 @@ public abstract class StatementVisitor<R, C> implements NodeVisitor<R, C> {
     return null;
   }
 
+  public R visitPredicateStatement(PredicateStatement predicateStatement, C context) {
+    if (predicateStatement instanceof ConditionStatement) {
+      return visitConditionStatement(predicateStatement.unwrap(ConditionStatement.class), context);
+    } else if (predicateStatement instanceof RelationalStatement) {
+      return visitRelationalStatement(
+          predicateStatement.unwrap(RelationalStatement.class), context);
+    } else {
+      return null;
+    }
+  }
+
+  public R visitConditionStatement(ConditionStatement conditionStatement, C context) {
+    return null;
+  }
+
+  public R visitRelationalStatement(RelationalStatement relationalStatement, C context) {
+    return null;
+  }
+
   public R visitOrderByStatement(OrderByStatement orderByStatement, C context) {
     return null;
   }
@@ -45,6 +64,15 @@ public abstract class StatementVisitor<R, C> implements NodeVisitor<R, C> {
     }
     if (node instanceof FilterStatement) {
       return visitFilterStatement(node.unwrap(FilterStatement.class), context);
+    }
+    if (node instanceof PredicateStatement) {
+      return visitPredicateStatement(node.unwrap(PredicateStatement.class), context);
+    }
+    if (node instanceof ConditionStatement) {
+      return visitConditionStatement(node.unwrap(ConditionStatement.class), context);
+    }
+    if (node instanceof RelationalStatement) {
+      return visitRelationalStatement(node.unwrap(RelationalStatement.class), context);
     }
     if (node instanceof OrderByStatement) {
       return visitOrderByStatement(node.unwrap(OrderByStatement.class), context);

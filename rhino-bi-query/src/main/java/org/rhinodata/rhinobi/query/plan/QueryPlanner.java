@@ -54,7 +54,7 @@ public record QueryPlanner(QueryContext queryContext) {
         public PlanNode visitProjectStatement(ProjectStatement projectStatement,StatementPlanHelper parent){
             Projects projects = new Projects();
             projectStatement.getItems().forEach(item -> {
-                projects.addProject(new Projects.Project(item.expr(),item.alias()));
+                projects.addProject(new Projects.Project(item.getExpr(),item.getAlias()));
             });
             parent.setProjects(projects);
             return null;

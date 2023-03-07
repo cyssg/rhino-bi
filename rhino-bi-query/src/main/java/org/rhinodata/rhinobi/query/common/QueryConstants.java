@@ -19,6 +19,8 @@ public interface QueryConstants {
   String RIGHT_JOIN = SPACE + "right join" + SPACE;
   String FULL_JOIN = SPACE + "full outer join" + SPACE;
   String ON = SPACE + "on" + SPACE;
+  String AND = SPACE + "and" + SPACE;
+  String OR = SPACE + "or" + SPACE;
   String SINGLE_QUOTE = "'";
   String DOUBLE_QUOTE = "\"";
   String SPECIAL_QUOTE = "`";

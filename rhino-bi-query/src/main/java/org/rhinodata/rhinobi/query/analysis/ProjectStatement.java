@@ -2,6 +2,7 @@ package org.rhinodata.rhinobi.query.analysis;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.rhinodata.rhinobi.common.enums.DataType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -62,5 +63,18 @@ public class ProjectStatement extends Statement implements Iterable<ProjectState
     return null;
   }
 
-  public record Item(String expr, String alias, boolean isGroupBy) {}
+  public static class Item extends SymbolReference {
+
+    private final boolean isGroupBy;
+
+    public Item(
+        String uuid, String name, String expr, String alias, DataType dataType, boolean isGroupBy) {
+      super(uuid, name, expr, alias, dataType);
+      this.isGroupBy = isGroupBy;
+    }
+
+    public boolean isGroupBy() {
+      return isGroupBy;
+    }
+  }
 }

@@ -1,9 +1,10 @@
 package org.rhinodata.rhinobi.query.dsl;
 
 import cn.hutool.core.lang.Assert;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-import lombok.Builder;
-import lombok.Data;
+import org.apache.pulsar.shade.javax.annotation.concurrent.Immutable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -15,30 +16,34 @@ import java.util.function.Consumer;
  * @author chenye
  * @date 2023-02-04
  */
-@Builder
-@Data
-public class  MetricSpec extends Dql implements Iterable<Expression> {
+@Immutable
+public class MetricSpec extends Dql implements Iterable<ReferenceSpec> {
 
-  private final List<Expression> expressionList;
+  private final List<ReferenceSpec> items;
 
-  public MetricSpec(List<Expression> expressionList) {
-    this.expressionList =
-        ImmutableList.copyOf(Assert.notNull(expressionList, "expressionList 为NULL"));
+  @JsonCreator
+  public MetricSpec(@JsonProperty("items") List<ReferenceSpec> items) {
+    this.items = ImmutableList.copyOf(Assert.notNull(items, "items 为NULL"));
+  }
+
+  @JsonProperty
+  public List<ReferenceSpec> getItems() {
+    return items;
   }
 
   @NotNull
   @Override
-  public Iterator<Expression> iterator() {
-    return expressionList.iterator();
+  public Iterator<ReferenceSpec> iterator() {
+    return items.iterator();
   }
 
   @Override
-  public void forEach(Consumer<? super Expression> action) {
+  public void forEach(Consumer<? super ReferenceSpec> action) {
     Iterable.super.forEach(action);
   }
 
   @Override
-  public Spliterator<Expression> spliterator() {
+  public Spliterator<ReferenceSpec> spliterator() {
     return Iterable.super.spliterator();
   }
 }

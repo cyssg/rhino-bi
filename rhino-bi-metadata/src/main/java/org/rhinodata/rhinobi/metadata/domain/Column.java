@@ -8,6 +8,8 @@ import org.rhinodata.rhinobi.common.enums.DataType;
  */
 public interface Column {
 
+    String getUuid();
+
     ColumnType getColumnType();
 
     String getName();
